@@ -19,7 +19,7 @@ class AuthController extends Controller
         if ($validator->fails()){
             return response()->json(['status' => false, 'message' => $validator->getMessageBag()->first()]);
         }
-        $user = User::where('email', $request->get('email'))->first();
+        $user = User::where('email', $request->get('email'))->orWhere('id', $request->get('email'))->first();
 
         if ($user){
             return response()->json([
