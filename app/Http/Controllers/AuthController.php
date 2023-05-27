@@ -10,12 +10,19 @@ class AuthController extends Controller
 {
     //
     public function login(Request $request){
-
         $validator = Validator($request->all(), [
-            'email' => 'required|email|'
+            'email' => 'required|email|exists:users,email',
+            'password' => 'required'
         ]);
+        if ($validator->fails()){
+            return response()->json(['status' => false, 'message' => $validator->getMessageBag()->first()]);
+        }
+        $user = User::where('email', $request->get('email'))->first();
 
-
+        return response()->json([
+            'status' => true,
+            'user_type' => $user->user_type
+        ]);
 
     }
 
