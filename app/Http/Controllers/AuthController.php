@@ -22,10 +22,18 @@ class AuthController extends Controller
         $user = User::where('email', $request->get('email'))->orWhere('id', $request->get('email'))->first();
 
         if ($user){
-            return response()->json([
-                'status' => true,
-                'user_type' => $user->user_type
-            ]);
+            if (Hash::check($request->get('password'), $user->password)){
+                return response()->json([
+                    'status' => true,
+                    'user_type' => $user->user_type
+                ]);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'message' => 'user password id wrong'
+                ]);
+            }
+
         }
         return response()->json([
             'status' => false,
